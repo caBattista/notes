@@ -1,0 +1,1 @@
+A [[Database|database]] for multiple structures like [[Graph Structure|graph]] or [[Relational Database|relational]].

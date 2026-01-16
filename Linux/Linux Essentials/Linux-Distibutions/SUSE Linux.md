@@ -1,0 +1,1 @@
++ A [[Linux-Distribution]] used mostly for the tool [[YaST]]

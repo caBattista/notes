@@ -1,0 +1,1 @@
++ A standardised method for using resources from other sevice providers or a private cloud

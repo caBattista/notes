@@ -1,0 +1,1 @@
+A [[operating system]] developed in 1984 called GNU is not [[Unix]]
