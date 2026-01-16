@@ -305,3 +305,34 @@ ANY scripts run automatically during install
 ⚠️ This does not disable manually-run scripts (npm run build, etc.) — only automatic lifecycle scripts.
 
 > npm config set ignore-scripts true
+> 
+# Docker compose with name
+docker compose -p cl1 up
+
+# Docker compose stop cluster
+docker compose stop
+
+# To remove all containers of cluster
+docker rm -f cl1-nginx-1 cl1-bff-1 cl1-kc-1 cl1-kc_pg_db-1
+
+# MSQL: 
+localhost:1433
+
+# Keycloak
+
+# Java Home
+~/.jdks/openjdk-25.0.1/bin
+
+# Java Maven cert
+~/.jdks/openjdk-25.0.1/bin/keytool -genkey -alias "javaptscatruststore" -keyalg "RSA" -keystore "/home/shared/notes/javaptscatruststore.jks"
+~/.jdks/openjdk-25.0.1/bin/keytool -import -alias "your-certificate" -file "cert.crt" -keystore "/home/shared/notes/javaptscatruststore.jks" -storepass ""
+
+# In IDEA set File | Settings | Build, Execution, Deployment | Build Tools | Maven | Runner
+-Djavax.net.ssl.trustStore=/home/shared/notes/javaptscatruststore.jks -Djavax.net.ssl.trustStorePassword=
+
+# Docker build java container
+docker build -t oauth2-client:latest .
+docker run -p 8081:8081 oauth2-client:latest
+
+# Git
+git remote set-url origin git@gitlab.pts.local:it-abteilung/portal2/docker.git
