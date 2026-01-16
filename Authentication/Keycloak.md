@@ -1,7 +1,8 @@
 ---
 created: 1970-01-01T01:00
-updated: 2025-12-05T16:43
+updated: 2026-01-16T12:00
 source: https://www.keycloak.org/server/enabletls
+source2: https://www.keycloak.org/getting-started/getting-started-docker
 ---
 # Start with Docker
 
@@ -14,6 +15,14 @@ quay.io/keycloak/keycloak:26.4.7 \
 start-dev
 ```
 
+## Realm export and import
+
+https://www.keycloak.org/server/importExport
+
++ Or in the UI
+    + Realm settings > Action > Partial Export
+    + Realm settings > Action > Partial Import
+    + Manage Realms > Create Realm > Resource file
 ## Set up [[TLS]] with self signed certificate ([[Docker]])
 
 #### [[OpenSSL]] (confirmed)

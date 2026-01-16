@@ -1,6 +1,6 @@
 ---
 created: 1970-01-01T01:00
-updated: 2025-12-05T12:55
+updated: 2026-01-16T11:57
 source: https://docs.docker.com/engine/install/debian/
 ---
 # Set up
@@ -18,10 +18,31 @@ sudo systemctl stop docker              # Stop docker service
 sudo usermod -aG docker USERNAME # Add user to group
 newgrp docker # Go into that user and run this to add the group
 ```
+
 ## 🔥🧱 Firewall
 
 Docker manages it's own firewall rules by default inside [[Iptables]].
+## Block internet to user traffic
+Use DOCKER-USER Chain. Docker runs all user-defined rules in the DOCKER-USER chain before Docker’s own rules. That’s perfect for restricting containers.
+#### Block all containers from internet access
 
+```sh
+sudo iptables -I DOCKER-USER -s 172.17.0.0/16 -j DROP
+```
+#### To remove
+
+```sh
+sudo iptables -D DOCKER-USER -s 172.17.0.0/16 -j DROP
+```
+#### Allow container → host before the DROP
+
+```sh
+sudo iptables -I DOCKER-USER -s 172.17.0.0/16 -d 172.17.0.1 -j ACCEPT
+```
+#### To test with curl
+```sh
+docker run --rm curlimages/curl:8.17.0 -L -v http://wasseralfinger.de/ 
+```
 ## Usage
 
 ## 📌 General
@@ -92,11 +113,12 @@ docker volume inspect MYVOL
 docker volume rm myvol
 docker volume prune                        # Remove unused volumes
 ```
-## ▶️ Exec inside container
+## ▶️ Exec inside container (Console inside container)
 
 ```sh
 docker exec CONTAINER ls
-docker exec -it CONTAINER /bin/bash       # Interactive shell
+docker exec -it CONTAINER /bin/bash              # Interactive shell
+docker exec -it --user root CONTAINER /bin/bash  # As spec. user
 ```
 ## 🌐 Networks
 
