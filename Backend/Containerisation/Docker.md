@@ -1,6 +1,6 @@
 ---
 created: 1970-01-01T01:00
-updated: 2026-01-16T11:57
+updated: 2026-01-16T15:57
 source: https://docs.docker.com/engine/install/debian/
 ---
 # Set up
@@ -95,8 +95,10 @@ docker rmi IMAGE
 docker rmi $(docker images -q) # Remove all images
 
 #Save / Load
-docker save IMAGE > image.tar
-docker load < image.tar
+docker save -o image.tar IMAGE:tag
+docker load -i image.tar
+docker save -o images.tar $(docker images -q) # Saves all images at once
+docker load -i images.tar
 ```
 ## 📁Volumes
 
