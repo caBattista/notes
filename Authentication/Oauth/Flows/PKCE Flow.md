@@ -1,6 +1,6 @@
 ---
 created: 1970-01-01T01:00
-updated: 2025-12-06T20:56
+updated: 2026-01-19T08:55
 source: https://larskoelpin.de/2022-09-11-oauth-pkce/
 ---
 ![[Bildschirmfoto vom 2025-11-16 10-58-31.png]]
@@ -68,4 +68,4 @@ Now the React app sends a **POST request to Keycloak’s token endpoint**:
 1. **No client secret is required** because PKCE ensures the code can only be exchanged by the party that generated the code verifier.
 2. **Prevents authorization code interception**:
     - If a malicious actor intercepts the authorization code, it won’t have the code verifier, so the token request fails.
-3. **Single-page apps ([[React|React]], [[Angular|Angular]], etc.) are safe** using PKCE without storing secrets.
+3. **Single-page apps ([[React Cheat Sheet|React]], [[Angular Cheat Sheet|Angular]], etc.) are safe** using PKCE without storing secrets.
