@@ -1,8 +1,7 @@
 ---
 created: 1970-01-01T01:00
-updated: 2025-12-07T12:26
+updated: 2026-01-19T09:01
 ---
-A [[JavaScript|Javascript]] library for creating frondend Apps.  Also called [[Front end framework]]
 # 🧩 Components
 
 A component is a function that returns UI. Everything else builds on this.
