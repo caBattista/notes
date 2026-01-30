@@ -1,6 +1,6 @@
 ---
 created: 1970-01-01T01:00
-updated: 2026-01-19T09:01
+updated: 2026-01-30T11:55
 ---
 # 🧩 Components
 
@@ -189,3 +189,228 @@ This creates predictable, easy-to-debug UI.
 4. **Think in React Tree**
     - UI broken into small reusable parts
     - Parent/child relationships
+# 1️⃣ React Context (Context API)
+
+## What problem it solves
+
+**Prop drilling**.
+
+Instead of passing props like:
+
+`App → Page → Sidebar → Button`
+
+you can put shared data in **context** and read it anywhere in the tree.
+
+Context is built into React and is best for:
+
+- Theme (dark/light)
+- Auth user
+- Locale / language
+- Feature flags
+- Small–medium global state
+---
+## Core idea
+
+Context lets you:
+
+1. **Create** a context
+2. **Provide** a value
+3. **Consume** the value anywhere below
+
+---
+## Example: Theme Context
+
+### 1️⃣ Create the context
+
+```jsx 
+import { createContext } from "react";  export const ThemeContext = createContext("light");
+```
+### 2️⃣ Provide the context
+
+```jsx
+import { ThemeContext } from "./ThemeContext";  function App() {   
+return (     
+	<ThemeContext.Provider value="dark">       
+		<Page />    
+	</ThemeContext.Provider>   
+	); }
+```
+### 3️⃣ Consume the context
+
+```jsx 
+import { useContext } from "react"; 
+import { ThemeContext } from "./ThemeContext";  
+function Button() {   
+	const theme = useContext(ThemeContext);    
+	return (     
+		<button className={theme === "dark" ? "dark-btn" : "light-btn"}>
+			Click me     
+		</button>   
+		); }
+```
+## Context with state (very common)
+
+```jsx
+function ThemeProvider({ children }) {   
+const [theme, setTheme] = useState("light");    
+return (
+	<ThemeContext.Provider value={{ theme, setTheme }}>       
+		{children}     
+	</ThemeContext.Provider>   
+	); }
+```
+
+Usage:
+
+`const { theme, setTheme } = useContext(ThemeContext);`
+
+---
+## ⚠️ Context limitations
+
+- **Every consumer re-renders** when the value changes
+- Not great for:
+    - Very frequent updates
+    - Large, complex state
+    - Debugging time-travel or undo
+
+👉 This is where Redux often comes in.
+
+---
+# 2️⃣ Redux
+
+## What problem it solves
+
+**Predictable, centralized state management at scale**
+
+Redux is ideal when:
+- State is complex
+- Many unrelated components need it
+- You want clear state flow & debugging
+- You need caching, syncing, persistence, or devtools
+
+Think:
+- Shopping cart
+- Auth session
+- Notifications
+- Server data cache
+- Multi-step workflows
+
+---
+## Core Redux ideas (classic mental model)
+
+1. **Store** – the single source of truth
+2. **Actions** – plain objects describing what happened
+3. **Reducers** – pure functions that update state
+4. **Dispatch** – sends actions to reducers
+
+> “Actions describe _what happened_, reducers decide _how state changes_.”
+
+---
+## Redux Toolkit (modern Redux)
+
+You almost **never write classic Redux anymore**. Redux Toolkit (RTK) is the standard.
+
+---
+## Example: Counter with Redux Toolkit
+
+### 1️⃣ Create a slice
+
+```jsx 
+import { createSlice } from "@reduxjs/toolkit";  
+const counterSlice = 
+	createSlice({   
+		name: "counter",   
+		initialState: { value: 0 },   
+		reducers: {     increment: (state) => {       
+			state.value += 1;     
+		},     
+		decrement: (state) => {       
+			state.value -= 1;     
+		},   
+	}, });  
+export const { increment, decrement } = counterSlice.actions; 
+export default counterSlice.reducer;
+```
+### 2️⃣ Create the store
+
+```js 
+import { configureStore } from "@reduxjs/toolkit"; 
+import counterReducer from "./counterSlice";  
+export const store = configureStore({   
+	reducer: {     
+		counter: counterReducer,   
+		}, 
+	});
+```
+### 3️⃣ Provide the store
+
+```jsx
+	import { Provider } from "react-redux"; import { store } from "./store";  function App() {   
+	return (     
+	<Provider store={store}>       
+		<Counter />     
+	</Provider>   ); 
+	}
+```
+### 4️⃣ Use Redux in components
+
+```jsx
+	import { useSelector, useDispatch } from "react-redux"; 
+	import { increment, decrement } from "./counterSlice";  
+	function Counter() {   
+		const count = useSelector((state) => state.counter.value);   
+		const dispatch = useDispatch();    
+		return (<>       
+			<p>{count}</p>       
+			<button onClick={() => dispatch(increment())}>+</button>       
+			<button onClick={() => dispatch(decrement())}>-</button>     
+			</>   
+		); 
+	}
+```
+
+---
+## Why Redux scales better than Context
+
+- Components only re-render when selected state changes
+- Middleware (logging, async, persistence)
+- Excellent devtools (time travel, inspect actions)
+- Clear separation of concerns
+- Easier to test
+
+---
+# 3️⃣ Context vs Redux (when to use what)
+
+### ✅ Use Context when:
+
+- State is small & simple
+- Updates are infrequent
+- App is small or medium
+- Example: theme, auth user, language
+
+### ✅ Use Redux when:
+
+- State is large or shared widely
+- Many updates per second
+- You need async logic & caching
+- You want debuggability and structure
+
+---
+## 🧠 Important truth
+
+Redux **uses Context internally**.
+
+So the real choice is:
+
+> **Simple global state → Context**  
+> **Complex global state → Redux**
+
+---
+# 4️⃣ Common real-world combo
+
+Many apps do this:
+
+- Context → theme, auth, feature flags
+- Redux → app/business data
+
+Totally normal. Very common in production.
